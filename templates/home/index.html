@@ -28,11 +28,13 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-success mg10">Search</button>
                 </div>
-                <div class="form-group">
-                    <button type="button" class="btn btn-success mg10"
-                            onclick="document.getElementById('fileInput').click();">Import
-                    </button>
-                </div>
+                {% if user.is_superuser %}
+                    <div class="form-group">
+                        <button type="button" class="btn btn-success mg10"
+                                onclick="document.getElementById('fileInput').click();">Import
+                        </button>
+                    </div>
+                {% endif %}
             </form>
             <form class="form-inline" method="post" action="{% url 'import_data' %}" enctype="multipart/form-data"
                   style="display: none">
