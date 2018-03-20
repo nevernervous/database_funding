@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row" id="search-bar">
+            <form class="form-inline" method="post" action="{% url 'home' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <select class="form-control" id="searchType" name="searchType" style="margin: 0px 10px">
+                        <option value="sponsor" {% if searchType == 'sponsor' %} selected {% endif %}>Sponsor</option>
+                        <option value="deadline" {% if searchType == 'deadline' %} selected {% endif %}>Deadline
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group" id="search">
+                    <input type="text" class="form-control mg10" name="search" placeholder="Search Sponsor"
+                           value="{{ search }}">
+                </div>
+                <div class="form-group deadline">
+                    <input type="date" class="form-control mg10" name="deadline_from" placeholder="Deadline From"
+                           value="{{ deadline_from }}">
+                </div>
+                <div class="form-group deadline">
+                    <input type="date" class="form-control mg10" name="deadline_to" placeholder="Deadline To"
+                           value="{{ deadline_to }}">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success mg10">Search</button>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success mg10"
+                            onclick="document.getElementById('fileInput').click();">Import
+                    </button>
+                </div>
+            </form>
+            <form class="form-inline" method="post" action="{% url 'import_data' %}" enctype="multipart/form-data"
+                  style="display: none">
+                {% csrf_token %}
+                <input name="file" type="file" id="fileInput"
+                       accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                       onchange="this.form.submit();">
+            </form>
+        </div>
+
+        <div class="row" style="margin: 10px;">
+            <table id="table" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Sponsor</th>
+                    <th class="no-sort">Title</th>
+                    <th>Link</th>
+                    <th>Amount</th>
+                    <th>Deadline</th>
+                    <th>Synopsis</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for project in projects %}
+                    <tr>
+                        <td>{{ project.id }}</td>
+                        <td>{{ project.sponsor }}</td>
+                        <td>{{ project.title }}</td>
+                        <td><a href="{{ project.link }}">{{ project.link }}</a></td>
+                        <td>{{ project.amount }}</td>
+                        {% if not project.deadline %}
+                            <td></td>
+                        {% else %}
+                            <td>{{ project.deadline|date:"m/d/Y" }}</td>
+                        {% endif %}
+                        <td><button class="btn btn-primary" onclick="swal('Synopisis', `{{ project.synopsis }}`);">View</button></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_javascripts %}
+    <script src="{% static 'js/home.js' %}"></script>
+    <script>
+        {% if searchType == 'sponsor' %}
+            $('.deadline').hide();
+        {% else %}
+            $('#search').hide();
+        {% endif %}
+    </script>
+{% endblock %}

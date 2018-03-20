@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %} Database Funding {% endblock %}</title>
+
+    {% include 'include/stylesheets.html' %}
+    {% block custom_stylesheets %} {% endblock %}
+</head>
+<body>
+{% include 'include/navbar.html' %}
+
+{% block content %}
+{% endblock %}
+
+{% include 'include/javascripts.html' %}
+{% block custom_javascripts %}
+{% endblock %}
+
+</body>
+</html>

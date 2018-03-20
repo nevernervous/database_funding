@@ -1,0 +1,18 @@
+#navbar {
+    background-color: #000080;
+    margin-bottom: 0px;
+}
+
+#navbar .navbar-brand{
+    color: #f5dd5d;
+    margin-left: 10px;
+}
+
+#search-bar {
+    background-color: #79aec8;
+    padding: 10px 40px;
+}
+
+.mg10{
+    margin: 0px 10px;
+}
