@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
+from django.db.models import Q
 from django.core import serializers
 from openpyxl import load_workbook
 from datetime import datetime
 
 from .models import Project
+
 
 
 # Create your views here.
@@ -23,9 +25,27 @@ class HomeView(View):
         if search_type == 'sponsor':
             search = request.POST.get('search')
             if search:
-                projects = Project.objects.filter(sponsor__contains=search, active='Y')
+                projects = Project.objects.filter(sponsor__contains=search, active='Y').order_by('deadline')
             else:
-                projects = Project.objects.filter(active='Y')
+                projects = Project.objects.filter(active='Y').order_by('deadline')
+        elif search_type == 'anything':
+            anything = request.POST.get('anything')
+            split = ''
+            if anything.find(' + ') > -1:
+                split = ' + '
+            elif anything.find(' or ') > -1:
+                split = ' or '
+            search_queries = anything.split(split)
+            sponsor = search_queries[0]
+            date = search_queries[1]
+            date = datetime.strptime(date, '%m/%d/%Y').strftime('%Y-%m-%d')
+
+            if split == ' + ':
+                projects = Project.objects.filter(sponsor__contains=sponsor, deadline=date, active='Y')\
+                    .order_by('deadline')
+            elif split == ' or ':
+                projects = Project.objects.filter(Q(sponsor__contains=sponsor) | Q(deadline=date), active='Y') \
+                    .order_by('deadline')
         else:
             deadline_from = request.POST.get('deadline_from')
             deadline_to = request.POST.get('deadline_to')

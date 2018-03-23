@@ -2,6 +2,7 @@ var tableData = [];
 
 $(document).ready(function () {
   $('.deadline').hide();
+  $('#anything').hide();
   var table = $('#table').dataTable({
     data: tableData,
     aoColumnDefs: [
@@ -33,18 +34,28 @@ $(document).ready(function () {
   });
 
   $('#searchType').on('change', function () {
-    if (this.value === 'sponsor') {
-      $('#search').show();
-      $('.deadline').hide();
-    } else {
-      $('#search').hide();
-      $('.deadline').show();
+    const search = $('#search').hide();
+    const deadline = $('.deadline').hide();
+    const anything = $('#anything').hide();
+    switch (this.value) {
+      case 'sponsor':
+        search.show();
+        break;
+      case 'deadline':
+        deadline.show();
+        break;
+      case 'anything':
+        anything.show();
+        break;
     }
   });
 
   var form = $('#search-form');
   form.ajaxForm({
     delegation: true,
+    error: function (data, statusText, xhr, $form) {
+      table.fnClearTable();
+    },
     success: function (data, statusText, xhr, $form) {
       table.fnClearTable();
       if (data.length > 0) {

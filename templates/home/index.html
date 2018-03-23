@@ -10,6 +10,7 @@
                     <select class="form-control" id="searchType" name="searchType" style="margin: 0px 10px">
                         <option value="sponsor" selected>Sponsor</option>
                         <option value="deadline">Deadline</option>
+                        <option value="anything">Anything</option>
                     </select>
                 </div>
                 <div class="form-group" id="search">
@@ -20,6 +21,9 @@
                 </div>
                 <div class="form-group deadline">
                     <input data-provide="datepicker" class="form-control mg10" name="deadline_to" placeholder="Deadline To">
+                </div>
+                <div class="form-group" id="anything">
+                    <input type="text" class="form-control mg10" name="anything" placeholder="Sponsor +(or) Date">
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success mg10">Search</button>
