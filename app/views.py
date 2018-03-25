@@ -46,21 +46,23 @@ class HomeView(View):
             elif split == ' or ':
                 projects = Project.objects.filter(Q(sponsor__contains=sponsor) | Q(deadline=date), active='Y') \
                     .order_by('deadline')
-        else:
+        elif search_type == 'deadline':
             deadline_from = request.POST.get('deadline_from')
             deadline_to = request.POST.get('deadline_to')
             if deadline_from and deadline_to:
                 deadline_from = datetime.strptime(deadline_from, '%m/%d/%Y').strftime('%Y-%m-%d')
                 deadline_to = datetime.strptime(deadline_to, '%m/%d/%Y').strftime('%Y-%m-%d')
-                projects = Project.objects.filter(deadline__range=[deadline_from, deadline_to]).order_by('deadline')
+                projects = Project.objects.filter(deadline__range=[deadline_from, deadline_to], active='Y').order_by('deadline')
             elif deadline_from:
                 deadline_from = datetime.strptime(deadline_from, '%m/%d/%Y').strftime('%Y-%m-%d')
-                projects = Project.objects.filter(deadline__gte=deadline_from).order_by('deadline')
+                projects = Project.objects.filter(deadline__gte=deadline_from, active='Y').order_by('deadline')
             elif deadline_to:
                 deadline_to = datetime.strptime(deadline_to, '%m/%d/%Y').strftime('%Y-%m-%d')
-                projects = Project.objects.filter(deadline__lte=deadline_to).order_by('deadline')
+                projects = Project.objects.filter(deadline__lte=deadline_to, active='Y').order_by('deadline')
             else:
                 projects = Project.objects.all().order_by('deadline')
+        else:
+            projects = Project.objects.filter(active='Y').order_by('deadline')
         data = list(projects.values())
         return JsonResponse(data, safe=False)
 

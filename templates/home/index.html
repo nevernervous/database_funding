@@ -8,7 +8,8 @@
                 {% csrf_token %}
                 <div class="form-group">
                     <select class="form-control" id="searchType" name="searchType" style="margin: 0px 10px">
-                        <option value="sponsor" selected>Sponsor</option>
+                        <option value="all" selected>All</option>
+                        <option value="sponsor">Sponsor</option>
                         <option value="deadline">Deadline</option>
                         <option value="anything">Anything</option>
                     </select>
@@ -58,24 +59,6 @@
                     <th>Synopsis</th>
                 </tr>
                 </thead>
-                <tbody>
-                </tbody>
-{#                {% for project in projects %}#}
-{#                    <tr>#}
-{#                        <td>{{ project.id }}</td>#}
-{#                        <td>{{ project.sponsor }}</td>#}
-{#                        <td>{{ project.title }}</td>#}
-{#                        <td><a href="{{ project.link }}">{{ project.link }}</a></td>#}
-{#                        <td>{{ project.amount }}</td>#}
-{#                        {% if not project.deadline %}#}
-{#                            <td></td>#}
-{#                        {% else %}#}
-{#                            <td>{{ project.deadline|date:"m/d/Y" }}</td>#}
-{#                        {% endif %}#}
-{#                        <td><button class="btn btn-primary" onclick="swal('Synopisis', `{{ project.synopsis }}`);">View</button></td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-
             </table>
         </div>
     </div>

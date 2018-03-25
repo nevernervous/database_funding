@@ -1,6 +1,7 @@
 var tableData = [];
 
 $(document).ready(function () {
+  $('#search').hide();
   $('.deadline').hide();
   $('#anything').hide();
   var table = $('#table').dataTable({
@@ -19,7 +20,7 @@ $(document).ready(function () {
       {
         data: 'link',
         render: function (data, type, row) {
-          return `<a href="${data}">${data}</a>`;
+          return `<a href="${data}" target="_blank">${data}</a>`;
         }
       },
       {data: 'amount'},
