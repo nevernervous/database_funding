@@ -3,16 +3,25 @@
     margin-bottom: 0px;
 }
 
-#navbar .navbar-brand{
+#navbar .navbar-brand {
     color: #f5dd5d;
     margin-left: 10px;
 }
 
 #search-bar {
     background-color: #79aec8;
-    padding: 10px 40px;
+    padding: 10px 0px;
+    display: none;
 }
 
-.mg10{
+.mg10 {
     margin: 0px 10px;
+}
+
+.dataTables_filter {
+    float: left;
+}
+
+.dataTables_wrapper .dataTables_length {
+float: right;
 }

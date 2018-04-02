@@ -10,19 +10,19 @@ $(document).ready(function () {
   $('#anything').hide();
   var table = $('#table').dataTable({
     data: tableData,
+    sDom: 'flRrtip',
     columns: [
-      {data: 'id'},
-      {data: 'sponsor'},{
+      {data: 'sponsor'}, {
         data: 'title',
         render: function (data, type, row) {
           return `<span>${data} <a onclick="swal('Synopisis',\`${row.synopsis}\n${row.awards}\`);">Synopsis >></a></span>`;
         }
-      },{
+      }, {
         data: 'link',
         render: function (data, type, row) {
           return `<a href="${data}" target="_blank">${data}</a>`;
         }
-      },{
+      }, {
         data: 'amount',
         render: function (data, type, row) {
           if (data === 'undisclosed')
@@ -30,13 +30,22 @@ $(document).ready(function () {
           return data ? '$' + numberWithCommas(data) : '';
 
         }
-      },{
+      }, {
         data: 'deadline',
         render: function (data, type, row) {
-
           return data ? moment(data).format('DD/MM/YYYY') : '';
         }
-      },
+      }, {
+        data: 'sponsor_deadline',
+        render: function (data, type, row) {
+          return data ? moment(data).format('DD/MM/YYYY') : '';
+        }
+      }, {
+        data: 'type',
+      }, {
+        data: 'limited',
+        class: 'text-center'
+      }
     ]
   });
 
@@ -66,10 +75,9 @@ $(document).ready(function () {
     success: function (data, statusText, xhr, $form) {
       table.fnClearTable();
       if (data.length > 0) {
-       table.fnAddData(data);
+        table.fnAddData(data);
       }
     }
   });
   form.submit();
-  $('table').excelTableFilter();
 });
