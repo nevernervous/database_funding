@@ -1,36 +1,42 @@
 var tableData = [];
 
+const numberWithCommas = (x) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 $(document).ready(function () {
   $('#search').hide();
   $('.deadline').hide();
   $('#anything').hide();
   var table = $('#table').dataTable({
     data: tableData,
-    aoColumnDefs: [
-      {
-        bSortable: false,
-        aTargets: [2, 3, 4, 6]
-      }
-    ],
-    searching: false,
     columns: [
       {data: 'id'},
-      {data: 'sponsor'},
-      {data: 'title'},
-      {
+      {data: 'sponsor'},{
+        data: 'title',
+        render: function (data, type, row) {
+          return `<span>${data} <a onclick="swal('Synopisis',\`${row.synopsis}\n${row.awards}\`);">Synopsis >></a></span>`;
+        }
+      },{
         data: 'link',
         render: function (data, type, row) {
           return `<a href="${data}" target="_blank">${data}</a>`;
         }
-      },
-      {data: 'amount'},
-      {data: 'deadline'},
-      {
-        data: 'synopsis',
+      },{
+        data: 'amount',
         render: function (data, type, row) {
-          return '<button class="btn btn-primary" onclick="swal(\'Synopisis\',\`' + `${data}\`);">View</button>`;
+          if (data === 'undisclosed')
+            return data;
+          return data ? '$' + numberWithCommas(data) : '';
+
         }
-      }
+      },{
+        data: 'deadline',
+        render: function (data, type, row) {
+
+          return data ? moment(data).format('DD/MM/YYYY') : '';
+        }
+      },
     ]
   });
 
@@ -65,5 +71,5 @@ $(document).ready(function () {
     }
   });
   form.submit();
-
+  $('table').excelTableFilter();
 });

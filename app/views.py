@@ -84,9 +84,16 @@ class ImportDataView(View):
             if isinstance(deadline, str):
                 deadline = None
             synopsis = row[17].value
-            active = row[41].value
+            sponsor_deadline = row[41].value
+            if isinstance(sponsor_deadline, str):
+                sponsor_deadline = None
+            active = row[42].value
+            _type = row[43].value
+            limited = row[44].value
+            awards = row[45].value
             project = Project.objects.create(sponsor=sponsor, title=title, link=link, amount=amount, deadline=deadline,
-                                             synopsis=synopsis, active=active)
+                                             synopsis=synopsis, sponsor_deadline=sponsor_deadline, active=active, type=_type, limited=limited,
+                                             awards=awards)
             project.save()
 
         return redirect('home')
