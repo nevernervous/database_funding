@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <form class="form-horizontal" action="{% url 'project_view' project.id %}" style="margin-top: 20px" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="sponsor">Sponsor</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="sponsor" value="{{ project.sponsor }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="title">Title</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="title" value="{{ project.title }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="link">Link</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="link" value="{{ project.link }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="amount">Amount</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="amount"
+                           value="{{ projejct.amount | default:"" }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="deadline">Internal Deadline</label>
+                <div class="col-sm-10">
+                    <input class="form-control" name="deadline" value="{{ project.deadline |date:"SHORT_DATE_FORMAT"}}"
+                    data-date-format="mm/dd/yyyy" data-provide="datepicker">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="sponsor_deadline">Sponsor Deadline</label>
+                <div class="col-sm-10">
+                    <input class="form-control" name="sponsor_deadline" value="{{ project.sponsor_deadline |date:"SHORT_DATE_FORMAT"}}"
+                    data-date-format="mm/dd/yyyy" data-provide="datepicker">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="active">Active</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="active">
+                        <option value="Y" {% if project.active == 'Y' %} selected {% endif %}>Y</option>
+                        <option value="N" {% if project.active == 'N' %} selected {% endif %}>N</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="limited">Limited</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="limited">
+                        <option value="Y" {% if project.limited == 'Y' %} selected {% endif %}>Y</option>
+                        <option value="N" {% if project.limited == 'N' %} selected {% endif %}>N</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="type">Type</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="type" value="{{ project.type | default:"" }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="awards">Awards</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="awards"
+                           value="{{ projejct.awards | default:"" }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="synopsis">Synopsis</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" name="synopsis" rows="3">{{ project.synopsis | default:"" }}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="comment">Comment</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" name="comment" rows="3">{{ project.comment | default:"" }}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block custom_javascripts %}
+    <script>
+    </script>
+{% endblock %}
+

@@ -15,5 +15,6 @@ class Project(models.Model):
     type = models.TextField(null=True)
     limited = models.CharField(max_length=1, default='Y')
     awards = models.TextField(null=True)
+    comment = models.TextField(null=True)
 
 

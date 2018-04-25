@@ -9,7 +9,6 @@ from datetime import datetime
 from .models import Project
 
 
-
 # Create your views here.
 
 
@@ -41,7 +40,7 @@ class HomeView(View):
             date = datetime.strptime(date, '%m/%d/%Y').strftime('%Y-%m-%d')
 
             if split == ' + ':
-                projects = Project.objects.filter(sponsor__contains=sponsor, deadline=date, active='Y')\
+                projects = Project.objects.filter(sponsor__contains=sponsor, deadline=date, active='Y') \
                     .order_by('deadline')
             elif split == ' or ':
                 projects = Project.objects.filter(Q(sponsor__contains=sponsor) | Q(deadline=date), active='Y') \
@@ -52,7 +51,8 @@ class HomeView(View):
             if deadline_from and deadline_to:
                 deadline_from = datetime.strptime(deadline_from, '%m/%d/%Y').strftime('%Y-%m-%d')
                 deadline_to = datetime.strptime(deadline_to, '%m/%d/%Y').strftime('%Y-%m-%d')
-                projects = Project.objects.filter(deadline__range=[deadline_from, deadline_to], active='Y').order_by('deadline')
+                projects = Project.objects.filter(deadline__range=[deadline_from, deadline_to], active='Y').order_by(
+                    'deadline')
             elif deadline_from:
                 deadline_from = datetime.strptime(deadline_from, '%m/%d/%Y').strftime('%Y-%m-%d')
                 projects = Project.objects.filter(deadline__gte=deadline_from, active='Y').order_by('deadline')
@@ -92,8 +92,52 @@ class ImportDataView(View):
             limited = row[44].value
             awards = row[45].value
             project = Project.objects.create(sponsor=sponsor, title=title, link=link, amount=amount, deadline=deadline,
-                                             synopsis=synopsis, sponsor_deadline=sponsor_deadline, active=active, type=_type, limited=limited,
+                                             synopsis=synopsis, sponsor_deadline=sponsor_deadline, active=active,
+                                             type=_type, limited=limited,
                                              awards=awards)
             project.save()
 
         return redirect('home')
+
+
+class DeleteProjectView(View):
+    def get(self, request, *args, **kwargs):
+        project_id = request.GET.get('id')
+        Project.objects.filter(id=project_id).delete()
+        return redirect('home')
+
+
+class ProjectView(View):
+    template_name = 'project/update.html'
+
+    def get(self, request, *args, **kwargs):
+        project = Project.objects.get(id=kwargs['project_id'])
+        return render(request, self.template_name, {'project': project})
+
+    def post(self, request, *args, **kwargs):
+        project = Project.objects.get(id=kwargs['project_id'])
+        project.sponsor = request.POST.get('sponsor')
+        project.title = request.POST.get('title')
+        project.link = request.POST.get('link')
+        project.amount = request.POST.get('amount')
+        project.synopsis = request.POST.get('synopsis')
+        project.active = request.POST.get('active')
+        project.type = request.POST.get('type')
+        project.limited = request.POST.get('limited')
+        project.awards = request.POST.get('awards')
+        project.limited = request.POST.get('limited')
+        deadline = request.POST.get('deadline')
+        if deadline:
+            project.deadline = datetime.strptime(deadline, '%m/%d/%Y')
+        else:
+            project.deadline = None
+        sponsor_deadline = request.POST.get('sponsor_deadline')
+        if deadline:
+            project.sponsor_deadline = datetime.strptime(sponsor_deadline, '%m/%d/%Y')
+        else:
+            project.deadline = None
+        project.comment = request.POST.get('comment')
+        project.save()
+
+        return render(request, self.template_name, {'project': project})
+

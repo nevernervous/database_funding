@@ -12,15 +12,20 @@ $(document).ready(function () {
     data: tableData,
     sDom: 'flRrtip',
     columns: [
-      {data: 'sponsor'}, {
+      {
+        data: 'sponsor',
+        width: '200px',
+      }, {
         data: 'title',
+        width: '200px',
         render: function (data, type, row) {
           return `<span>${data} <a onclick="swal('Synopisis',\`${row.synopsis}\n${row.awards}\`);">Synopsis >></a></span>`;
         }
       }, {
         data: 'link',
+        width: '200px',
         render: function (data, type, row) {
-          return `<a href="${data}" target="_blank">${data}</a>`;
+          return `<a href="${data}" target="_blank" style="word-wrap: break-word;">${data}</a>`;
         }
       }, {
         data: 'amount',
@@ -42,9 +47,23 @@ $(document).ready(function () {
         }
       }, {
         data: 'type',
+        width: '60px',
       }, {
         data: 'limited',
         class: 'text-center'
+      }, {
+        data: 'id',
+        width: '100px',
+        sortable: false,
+        render: function (data, type, row) {
+          return `
+                <div class="inline-group">
+                <a href="admin/logout" class="btn btn-primary" >Edit</a>
+                <a href="admin/logout" class="btn btn-danger" >Delete</a>          
+</div>
+                    `;
+
+        }
       }
     ]
   });
