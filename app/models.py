@@ -13,8 +13,9 @@ class Project(models.Model):
     active = models.CharField(max_length=1, default='Y', null=True)
     sponsor_deadline = models.DateField(blank=True, null=True)
     type = models.TextField(null=True)
-    limited = models.CharField(max_length=1, default='Y')
+    limited = models.CharField(max_length=100)
     awards = models.TextField(null=True)
     comment = models.TextField(null=True)
+    hide = models.BooleanField(default=False)
 
 

@@ -31,13 +31,6 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-success mg10">Search</button>
                 </div>
-                {% if user.is_superuser %}
-                    <div class="form-group">
-                        <button type="button" class="btn btn-success mg10"
-                                onclick="document.getElementById('fileInput').click();">Import
-                        </button>
-                    </div>
-                {% endif %}
             </form>
             <form class="form-inline" method="post" action="{% url 'import_data' %}" enctype="multipart/form-data"
                   style="display: none">
@@ -59,9 +52,6 @@
                     <th>Sponsor Deadline</th>
                     <th>Type</th>
                     <th>Limited</th>
-                    {% if user.is_superuser %}
-                        <th>Action</th>
-                    {% endif %}
                 </tr>
                 </thead>
             </table>
@@ -88,11 +78,16 @@
             {
               data: 'sponsor',
               width: '200px',
+              render: function (data, type, row) {
+                return `${data} <a href="project/${row.id}" style="margin-bottom: 2px">Edit>></a>`;
+
+              }
             }, {
               data: 'title',
               width: '200px',
               render: function (data, type, row) {
-                return `<span>${data} <a onclick="swal('Synopisis',\`${row.synopsis}\n${row.awards}\`);">Synopsis >></a></span>`;
+                let str = row.synopsis + '\n___________________________________________________\n' + row.awards.replace(/,/g, ': ');
+                return `<span>${data} <br><a onclick="swal('Synopisis',\`${str}\`);">Synopsis >></a></span>`;
               }
             }, {
               data: 'link',
@@ -124,20 +119,7 @@
             }, {
               data: 'limited',
               class: 'text-center'
-            },
-            {% if user.is_superuser %}
-              {
-                data: 'id',
-                width: '80px',
-                sortable: false,
-                render: function (data, type, row) {
-                  return `
-                    <a href="project/${data}" class="btn btn-primary" style="margin-bottom: 2px">Edit</a>
-                    <a href="project/delete?id=${data}" class="btn btn-danger">Delete</a>
-                    `;
-                }
-              }
-            {% endif %}
+            }
           ]
         });
 

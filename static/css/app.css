@@ -52,3 +52,11 @@
     color: white;
     font-size: 18px;
 }
+
+table.dataTable thead .sorting:after {
+    opacity: 0.7;
+}
+
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
+    opacity: 1;
+}

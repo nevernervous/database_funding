@@ -8,7 +8,6 @@ from datetime import datetime
 
 from .models import Project
 
-
 # Create your views here.
 
 
@@ -62,7 +61,7 @@ class HomeView(View):
             else:
                 projects = Project.objects.all().order_by('deadline')
         else:
-            projects = Project.objects.filter(active='Y').order_by('deadline')
+            projects = Project.objects.filter(active='Y', hide=False).order_by('deadline')
         data = list(projects.values())
         return JsonResponse(data, safe=False)
 
@@ -80,6 +79,8 @@ class ImportDataView(View):
             title = row[6].value
             link = row[7].value
             amount = row[9].value
+            if not isinstance(amount, int):
+                amount = ''
             deadline = row[13].value
             if isinstance(deadline, str):
                 deadline = None
@@ -137,6 +138,11 @@ class ProjectView(View):
         else:
             project.deadline = None
         project.comment = request.POST.get('comment')
+        hide = request.POST.get('hide')
+        if hide == 'Y':
+            project.hide = True
+        else:
+            project.hide = False
         project.save()
 
         return render(request, self.template_name, {'project': project})

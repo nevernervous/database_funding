@@ -9,5 +9,5 @@ class ProjectAdmin(admin.ModelAdmin):
     list_display = ('sponsor', 'title', 'link', 'amount', 'deadline', 'synopsis', 'active')
 
 
-admin.site.site_header = 'Administration'
+admin.site.site_header = 'Database Edit'
 admin.site.register(Project, ProjectAdmin)
