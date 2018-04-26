@@ -61,7 +61,16 @@ class HomeView(View):
             else:
                 projects = Project.objects.all().order_by('deadline')
         else:
-            projects = Project.objects.filter(active='Y', hide=False).order_by('deadline')
+            min_amount = request.POST.get('min_amount')
+            max_amount = request.POST.get('max_amount')
+            min_amount = min_amount.replace(',', '')
+            max_amount = max_amount.replace(',', '')
+            if not min_amount:
+                min_amount = 0
+            if max_amount:
+                projects = Project.objects.filter(active='Y', hide=False, amount__gte=min_amount, amount__lte=max_amount).order_by('deadline')
+            else:
+                projects = Project.objects.filter(active='Y', hide=False, amount__gte=min_amount).order_by('deadline')
         data = list(projects.values())
         return JsonResponse(data, safe=False)
 

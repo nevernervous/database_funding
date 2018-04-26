@@ -6,27 +6,35 @@
         <div class="row" id="search-bar">
             <form id="search-form" class="form-inline" method="post" action="{% url 'home' %}">
                 {% csrf_token %}
+{#                <div class="form-group">#}
+{#                    <select class="form-control" id="searchType" name="searchType" style="margin: 0px 10px">#}
+{#                        <option value="all" selected>All</option>#}
+{#                        <option value="sponsor">Sponsor</option>#}
+{#                        <option value="deadline">Deadline</option>#}
+{#                        <option value="anything">Anything</option>#}
+{#                    </select>#}
+{#                </div>#}
+{#                <div class="form-group" id="search">#}
+{#                    <input type="text" class="form-control mg10" name="search" placeholder="Search Sponsor">#}
+{#                </div>#}
+{#                <div class="form-group deadline">#}
+{#                    <input data-provide="datepicker" class="form-control mg10" name="deadline_from"#}
+{#                           placeholder="Deadline From">#}
+{#                </div>#}
+{#                <div class="form-group deadline">#}
+{#                    <input data-provide="datepicker" class="form-control mg10" name="deadline_to"#}
+{#                           placeholder="Deadline To">#}
+{#                </div>#}
+{#                <div class="form-group" id="anything">#}
+{#                    <input type="text" class="form-control mg10" name="anything" placeholder="Sponsor +(or) Date">#}
+{#                </div>#}
                 <div class="form-group">
-                    <select class="form-control" id="searchType" name="searchType" style="margin: 0px 10px">
-                        <option value="all" selected>All</option>
-                        <option value="sponsor">Sponsor</option>
-                        <option value="deadline">Deadline</option>
-                        <option value="anything">Anything</option>
-                    </select>
+                    <input class="form-control mg10" name="min_amount" id="min_amount"
+                           placeholder="Min Amount">
                 </div>
-                <div class="form-group" id="search">
-                    <input type="text" class="form-control mg10" name="search" placeholder="Search Sponsor">
-                </div>
-                <div class="form-group deadline">
-                    <input data-provide="datepicker" class="form-control mg10" name="deadline_from"
-                           placeholder="Deadline From">
-                </div>
-                <div class="form-group deadline">
-                    <input data-provide="datepicker" class="form-control mg10" name="deadline_to"
-                           placeholder="Deadline To">
-                </div>
-                <div class="form-group" id="anything">
-                    <input type="text" class="form-control mg10" name="anything" placeholder="Sponsor +(or) Date">
+                <div class="form-group">
+                    <input class="form-control mg10" name="max_amount" id="max_amount"
+                           placeholder="Max Amount">
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success mg10">Search</button>
@@ -62,7 +70,7 @@
 {% block custom_javascripts %}
     <script>
       var tableData = [];
-
+{#      var amountSearch = false;#}
       const numberWithCommas = (x) => {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       };
@@ -71,15 +79,42 @@
         $('#search').hide();
         $('.deadline').hide();
         $('#anything').hide();
+        $('#min_amount').keyup(function () {
+          let val = $(this).val().replace(/,/g, '');
+          let amount = numberWithCommas(val);
+          $(this).val(amount);
+        });
+        $('#max_amount').keyup(function () {
+          let val = $(this).val().replace(/,/g, '');
+          let amount = numberWithCommas(val);
+          $(this).val(amount);
+        });
+
         var table = $('#table').dataTable({
           data: tableData,
           sDom: 'flRrtip',
+{#          drawCallback: function (settings) {#}
+{#            if (!amountSearch) {#}
+{#              $('#table_filter').append(`#}
+{#                    <label style="padding-left: 10px;">Amount: <input type="text" class="form-control input-sm" name="search" id="amount-search"></label>#}
+{#                `);#}
+{#              $('#amount-search').keyup(function () {#}
+{#                let amount = '$' + numberWithCommas($(this).val());#}
+{#                table.api().columns(3).search(amount).draw();#}
+{#              })#}
+{#              amountSearch = true;#}
+{#            }#}
+{#          },#}
           columns: [
             {
               data: 'sponsor',
               width: '200px',
               render: function (data, type, row) {
-                return `${data} <a href="project/${row.id}" style="margin-bottom: 2px">Edit>></a>`;
+                {% if user.is_superuser %}
+                    return `${data} <br><a href="project/${row.id}" style="margin-bottom: 2px">Edit>></a>`;
+                {% else %}
+                  return `${data}`;
+                {% endif %}
 
               }
             }, {
@@ -93,7 +128,7 @@
               data: 'link',
               width: '200px',
               render: function (data, type, row) {
-                return `<a href="${data}" target="_blank" style="word-wrap: break-word;">${data}</a>`;
+                return `<a href="http://${data}" target="_blank" style="word-wrap: break-word;">http://www.${data}</a>`;
               }
             }, {
               data: 'amount',
